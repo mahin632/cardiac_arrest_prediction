@@ -14,16 +14,17 @@ This project combines data science, healthcare, and weather analytics to provide
 5. Custom UI with templates/ and static/ resources.
 
 # 📂 Project Structure
+```bash
 Cardiac_arrest_prediction-main/
-│── app.py                # Flask web app entry point
-│── hmm.py                # ML/Prediction-related code
-│── models.pkl            # Pre-trained ML model
-│── dataset.csv           # Cardiac dataset
-│── daily_weather.csv     # Weather dataset
-│── requirements.txt      # Python dependencies
-│── templates/            # HTML templates (frontend)
-│── static/               # CSS, JS, images
-│── docs/ & reports       # PDFs, DOCX project reports
+│── app.py                
+│── hmm.py                
+│── models.pkl            
+│── dataset.csv          
+│── requirements.txt      
+│── templates/           
+│── static/               
+│── docs/ & reports       
+```
 
 # ⚙️ Installation & Setup
 1. Clone the repository
@@ -48,6 +49,7 @@ Then open your browser at http://127.0.0.1:5000/
 
 # 📊 Model & Data
 Machine Learning: Uses scikit-learn models for classification.
+
 Datasets:
 dataset.csv → Patient health/clinical records.
 
