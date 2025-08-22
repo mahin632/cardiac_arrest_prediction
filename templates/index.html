@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cardiac Arrest Prediction</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100 p-5">
+
+    <header>
+        <nav class="bg-white p-4 shadow-md">
+            <ul class="flex justify-center space-x-4">
+                <li><a href="/" class="text-blue-500 hover:text-blue-700">Home</a></li>
+                <li><a href="/aboutUs" class="text-blue-500 hover:text-blue-700">About Us</a></li>
+                <!-- <li><a href="/contact" class="text-blue-500 hover:text-blue-700">Contact</a></li> -->
+            </ul>
+        </nav>
+    </header>
+
+    <h1 class="text-center text-2xl font-bold mb-5">Cardiac Arrest Prediction</h1>
+
+    <div class="max-w-lg mx-auto bg-white p-5 shadow-lg rounded-lg">
+        <form id="predictionForm">
+            <label for="name" class="block mb-2 font-bold">Full Name:</label>
+            <input type="text" id="name" name="name" class="w-full p-2 mb-4 border border-gray-300 rounded" required>
+
+            <label for="email" class="block mb-2 font-bold">Email Address:</label>
+            <input type="email" id="email" name="email" class="w-full p-2 mb-4 border border-gray-300 rounded" required>
+
+            <label for="gender" class="block mb-2 font-bold">Gender:</label>
+            <select id="gender" name="gender" class="w-full p-2 mb-4 border border-gray-300 rounded" required>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+            </select>
+
+            <label for="age" class="block mb-2 font-bold">Age:</label>
+            <input type="number" id="age" name="age" class="w-full p-2 mb-4 border border-gray-300 rounded" required>
+
+            <label for="bloodPressure" class="block mb-2 font-bold">Blood Pressure (mmHg):</label>
+            <input type="number" id="bloodPressure" name="bloodPressure" class="w-full p-2 mb-4 border border-gray-300 rounded" required>
+
+            <label for="cholesterol" class="block mb-2 font-bold">Cholesterol Level:</label>
+            <input type="number" id="cholesterol" name="cholesterol" class="w-full p-2 mb-4 border border-gray-300 rounded" required>
+
+            <label for="exercise" class="block mb-2 font-bold">Exercise (0 = No, 1 = Yes):</label>
+            <input type="number" id="exercise" name="exercise" class="w-full p-2 mb-4 border border-gray-300 rounded" required>
+
+            <label for="pain" class="block mb-2 font-bold">Pain (0 = No, 1 = Yes):</label>
+            <input type="number" id="pain" name="pain" class="w-full p-2 mb-4 border border-gray-300 rounded" required>
+
+            <label for="heartRate" class="block mb-2 font-bold">Heart Rate (bpm):</label>
+            <input type="number" id="heartRate" name="heartRate" class="w-full p-2 mb-4 border border-gray-300 rounded" required>
+
+            <button type="submit" class="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-700">Predict</button>
+        </form>
+    </div>
+
+    <div class="result-container text-center mt-5" id="resultContainer" style="display: none;">
+        <h3 class="text-xl font-bold">Prediction Result</h3>
+        <p id="predictionResult" class="text-lg"></p>
+    </div>
+
+    <div class="error text-red-500 text-center mt-5" id="errorContainer" style="display: none;"></div>
+
+    <script>
+        // Handle form submission
+        document.getElementById('predictionForm').addEventListener('submit', function (event) {
+            event.preventDefault();  // Prevent form submission
+
+            // Gather form data
+            const formData = new FormData(event.target);
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+
+            // Clear previous result or error
+            document.getElementById('resultContainer').style.display = 'none';
+            document.getElementById('errorContainer').style.display = 'none';
+
+            // Make POST request to Flask server
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data),
+            })
+                .then(response => {
+                    if (response.redirected) {
+                        window.location.href = response.url;
+                    } else {
+                        return response.json();
+                    }
+                })
+                .then(data => {
+                    if (data && data.error) {
+                        document.getElementById('errorContainer').style.display = 'block';
+                        document.getElementById('errorContainer').textContent = 'Error: ' + data.error;
+                    }
+                })
+                .catch(error => {
+                    // Handle errors
+                    document.getElementById('errorContainer').style.display = 'block';
+                    document.getElementById('errorContainer').textContent = 'Error: ' + error.message;
+                });
+        });
+    </script>
+
+</body>
+
+</html>
